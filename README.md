@@ -1,4 +1,4 @@
-# MISL Paper - Experiment Reproduction Scripts
+# UpSkill
 
 This repository contains scripts to reproduce the experiments from the paper "UpSkill: Mutual Information Skill Learning for Large Language Models".
 
