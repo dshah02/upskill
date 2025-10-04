@@ -1,0 +1,38 @@
+Thank you for reading our supplemental submission. 
+
+___________
+
+The Arithmetic Experiments in Section 5.1 were produced with the arithmetic_llm.py script.
+Please install PyTorch and note that there will be a slight difference between CPU and GPU outputs. 
+
+To reproduce the results in Figure 4, run and save the outputs of:
+
+python arithmetic_llm.py --alpha 0.5 --beta 0.5 --N 5 --warmup 100 --steps 2000 --C 5 --cap 1.
+python arithmetic_llm.py --alpha 0.0 --beta 0.0 --N 5 --warmup 100 --steps 2000 --C 5 --cap 1.
+
+To reproduce the extended results in Appendix E.6 Sensitivity to alpha_1 and cap, additionally run:
+
+python arithmetic_llm.py --alpha 1.0 --beta 1.0 --N 5 --warmup 100 --steps 2000 --C 5 --cap 1.
+python arithmetic_llm.py --alpha 0.5 --beta 0.5 --N 5 --warmup 100 --steps 2000 --C 5 --cap 1.5
+
+To reproduce the results in Appendix F: Ablated Arithmetic Environment, run scripts similar to the below:
+
+python arithmetic_llm.py --alpha 0.5 --beta 0.5 --N 5 --warmup 100 --steps 2000 --C 5 --cap 1. --kl_coef 0.05
+
+___________
+
+To reproduce the GSM8K Experiments, it is first necessary to replicate the environment of: https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Llama3.1_(8B)-GRPO.ipynb 
+
+Afterwards, download the models from huggingface with the cache_for_offline.py file. 
+As an example "python cache_for_offline.py --model qwen", will install Qwen/Qwen2.5-7B-Instruct from huggingface to local cache.
+For our compute setup, it was necessary to download all models to local cache. This will also download the GSM8k data.
+
+Next, run "python full_train.py" with the desired model, the desired alpha_mi, and the desired max_z.
+To reproduce the results in the paper, we use the parameters z = 5, alpha_mi = 5.0 for each model, 
+and we evaluate on the first 100 problems in the training set using benchmark.py. 
+
+To test the semantic mutual information, you can modify alpha_smi. 
+
+Enjoy!
+
+

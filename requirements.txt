@@ -1,0 +1,38 @@
+torch==2.6.0
+transformers==4.51.2
+accelerate==1.6.0
+datasets==3.5.0
+sentence-transformers==4.1.0
+peft==0.15.1
+trl==0.15.2
+bitsandbytes==0.45.5
+
+# Unsloth specific packages
+unsloth==2025.3.19
+unsloth-zoo==2025.3.17
+
+# Core inference/serving packages
+vllm==0.8.2
+xformers==0.0.29.post2
+
+# Data science basics
+numpy==1.26.4
+pandas==2.2.3
+matplotlib==3.10.1
+scikit-learn==1.6.1
+scipy==1.15.2
+
+# ML utilities
+tiktoken==0.9.0
+tokenizers==0.21.1
+safetensors==0.5.3
+einops==0.8.1
+
+# Development/notebook support
+ipykernel
+jupyter-client
+jupyter-core
+
+# API/web frameworks (if needed)
+anthropic==0.50.0
+openai==1.72.0
