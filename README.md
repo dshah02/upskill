@@ -192,7 +192,7 @@ upskill_code/
 If you use these scripts, please cite:
 
 ```bibtex
-@article{misl2024,
+@article{upskills2025,
   title={UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs},
   author={[Devan Shah, Owen Yang, Daniel Yang, Chongyi Zheng, Ben Eysenbach]},
   year={2025}
