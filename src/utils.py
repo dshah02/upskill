@@ -52,17 +52,47 @@ def load_model(cache_dir, max_seq_length, lora_rank, peft_apply=False):
     return model, tokenizer
 
 
-def load_model_alt(model_path, max_seq_length):
+def load_model_alt(base_model_path, model_path, max_seq_length):
     try:
-        model, tokenizer = FastLanguageModel.from_pretrained(
-            model_name=model_path,
-            max_seq_length=max_seq_length,
-            load_in_4bit=True,
-            fast_inference=False,
-            gpu_memory_utilization=0.6,
-            local_files_only=True,
-            trust_remote_code=True,
-        )
+        # Check if this is a LoRA checkpoint (has adapter files)
+        import os
+        if os.path.exists(os.path.join(model_path, "adapter_config.json")):
+            # This is a LoRA checkpoint, need to load base model first
+            # Find the base model directory
+
+            import glob
+            snapshot_glob = f"{base_model_path}/snapshots/*/"
+            snapshot_dirs = glob.glob(snapshot_glob)
+            if not snapshot_dirs:
+                raise FileNotFoundError(f"No snapshot directory found for base model in {snapshot_glob}")
+            base_model_dir = snapshot_dirs[0]
+            
+            # Load base model
+            model, tokenizer = FastLanguageModel.from_pretrained(
+                model_name=base_model_dir,
+                max_seq_length=max_seq_length,
+                load_in_4bit=False,
+                fast_inference=False,
+                local_files_only=True,
+                trust_remote_code=True,
+                device_map="auto",
+            )
+            
+            # Load LoRA adapter
+            from peft import PeftModel
+            model = PeftModel.from_pretrained(model, model_path)
+        else:
+            # Regular model loading
+            model, tokenizer = FastLanguageModel.from_pretrained(
+                model_name=model_path,
+                max_seq_length=max_seq_length,
+                load_in_4bit=True,
+                fast_inference=False,
+                gpu_memory_utilization=0.3,
+                local_files_only=True,
+                trust_remote_code=True,
+                device_map="auto",
+            )
     except Exception as e:
         raise
     return model, tokenizer

@@ -3,16 +3,18 @@
 import re
 from DAPO_math_dapo import compute_score
 
-# Load and prep dataset
-SYSTEM_PROMPT = """
-Respond in the following format:
-<reasoning>
-...
-</reasoning>
-<answer>
-...
-</answer>
-"""
+# # Load and prep dataset
+# SYSTEM_PROMPT = """
+# Respond in the following format:
+# <reasoning>
+# ...
+# </reasoning>
+# <answer>
+# ...
+# </answer>
+# """
+
+SYSTEM_PROMPT = "You are a helpful math assistant that solves problems step by step."
 
 XML_COT_FORMAT = """\
 <reasoning>
@@ -59,6 +61,11 @@ def soft_format_reward_func(completions, **kwargs) -> list[float]:
     matches = [re.match(pattern, r) for r in responses]
     return [0.5 if match else 0.0 for match in matches]
 
+def int_reward_func(completions, **kwargs) -> list[float]:
+    responses = [completion[0]['content'] for completion in completions]
+    extracted_responses = [extract_xml_answer(r) for r in responses]
+    return [0.5 if r.isdigit() else 0.0 for r in extracted_responses]
+
 
 def count_xml(text) -> float:
     count = 0.0
@@ -96,11 +103,15 @@ def math_correctness_func(prompts, completions, answer, **kwargs) -> list[float]
     responses = [completion[0]["content"] for completion in completions]
     q = prompts[0][-1]["content"]
     extracted_responses = [extract_xml_answer(r) for r in responses]
-    # print(f"\nExtracted:\n{extracted_responses}")
-    # print(f"\nAnswer:\n{answer}")
-    # print('-'*20, f"Question:\n{q}", f"\nAnswer:\n{answer[0]}", f"\nExtracted:\n{extracted_responses[0]}")
+    print(f"\nExtracted:\n{extracted_responses}")
+    print(f"\nAnswer:\n{answer}")
+    print('-'*20, f"Question:\n{q}", f"\nAnswer:\n{answer[0]}", f"\nExtracted:\n{extracted_responses[0]}")
+    print(extracted_responses)
     scores = [
         1 + compute_score(r, a)["score"] for r, a in zip(extracted_responses, answer)
     ]
+    print([
+        compute_score(r, a) for r, a in zip(extracted_responses, answer)
+    ])
     # print(f"Scores: {scores}")
     return scores
