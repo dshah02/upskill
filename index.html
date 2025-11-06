@@ -1,258 +1,410 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs"
+    />
+    <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css"
+    />
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-solarizedlight.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs-bibtex@2.1.0/prism-bibtex.min.js"></script>
+    <link rel="stylesheet" href="static/css/index.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description"
-    content="UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs" />
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-solarizedlight.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs-bibtex@2.1.0/prism-bibtex.min.js"></script>
-  <link rel="stylesheet" href="static/css/index.css" />
+    <title>
+      UpSkill: Mutual Information Skill Learning for Structured Response
+      Diversity in LLMs
+    </title>
 
-  <title>UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs</title>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-svg.js"
+    ></script>
+    <script>
+      function selectContent(query) {
+        var range = document.createRange();
+        var selection = window.getSelection();
+        var elem = document.querySelector(query);
+        range.selectNodeContents(elem);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    </script>
+  </head>
 
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-svg.js"></script>
-  <script>
-    function selectContent(query) {
-      var range = document.createRange()
-      var selection = window.getSelection()
-      var elem = document.querySelector(query)
-      range.selectNodeContents(elem)
-      selection.removeAllRanges()
-      selection.addRange(range)
-    }
-  </script>
-</head>
-
-<body>
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        inlineMath: [
-          ["$", "$"],
-          ["\\(", "\\)"],
-        ],
-        displayMath: [
-          ["$$", "$$"],
-          ["\\[", "\\]"],
-        ],
-        processEscapes: true,
-        macros: {
-          I: "\\mathcal{I}",
-          E: "\\mathbb{E}",
-          R: "\\mathbb{R}",
-          argmin: "\\mathop{\\arg\\min}",
-          argmax: "\\mathop{\\arg\\max}",
+  <body>
+    <script type="text/javascript">
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+          displayMath: [
+            ["$$", "$$"],
+            ["\\[", "\\]"],
+          ],
+          processEscapes: true,
+          macros: {
+            I: "\\mathcal{I}",
+            E: "\\mathbb{E}",
+            R: "\\mathbb{R}",
+            argmin: "\\mathop{\\arg\\min}",
+            argmax: "\\mathop{\\arg\\max}",
+          },
         },
-      },
-      svg: {
-        fontCache: "global",
-      },
-    }
-  </script>
-  <header>
-    <h1>UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs</h1>
-    <div class="authors">
-      <span class="author">
-        <a href="https://dshah02.github.io/" target="_blank">Devan Shah</a></span>
-      <span class="author">
-        <a href="mailto:oy3975@princeton.edu">Owen Yang</a></span>
-      <span class="author">
-        <a href="mailto:dy5251@princeton.edu">Daniel Yang</a></span>
-      <span class="author">
-        <a href="https://chongyi-zheng.github.io/" target="_blank">Chongyi Zheng</a></span>
-      <span class="author">
-        <a href="https://ben-eysenbach.github.io/" target="_blank">Benjamin Eysenbach</a></span>
-    </div>
-    <div class="notes">
-      <span class="institution">Princeton University</span><br />
-    </div>
-    <div class="links">
-      <span class="link">
-        <a href="./static/pdf/upskill.pdf" target="_blank" class="button">
-          <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
-        </a>
-      </span>
-      <!-- <span class="link">
+        svg: {
+          fontCache: "global",
+        },
+      };
+    </script>
+    <header>
+      <h1>
+        UpSkill: Mutual Information Skill Learning for Structured Response
+        Diversity in LLMs
+      </h1>
+      <div class="authors">
+        <span class="author">
+          <a href="https://dshah02.github.io/" target="_blank"
+            >Devan Shah</a
+          ></span
+        >
+        <span class="author">
+          <a href="mailto:oy3975@princeton.edu">Owen Yang</a></span
+        >
+        <span class="author">
+          <a href="mailto:dy5251@princeton.edu">Daniel Yang</a></span
+        >
+        <span class="author">
+          <a href="https://chongyi-zheng.github.io/" target="_blank"
+            >Chongyi Zheng</a
+          ></span
+        >
+        <span class="author">
+          <a href="https://ben-eysenbach.github.io/" target="_blank"
+            >Benjamin Eysenbach</a
+          ></span
+        >
+      </div>
+      <div class="notes">
+        <span class="institution">Princeton University</span><br />
+      </div>
+      <div class="links">
+        <span class="link">
+          <a href="./static/pdf/upskill.pdf" target="_blank" class="button">
+            <span class="icon"><i class="fas fa-file-pdf"></i></span
+            ><span>Paper</span>
+          </a>
+        </span>
+        <!-- <span class="link">
         <a href="https://arxiv.org/abs/2501.XXXXX" class="button">
           <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
         </a>
       </span> -->
-      <span class="link">
-        <a href="https://github.com/dshah02/upskill" class="button">
-          <span class="icon"><i class="fas fa-code"></i></span><span>Code</span>
-        </a>
-      </span>
-    </div>
-  </header>
+        <span class="link">
+          <a href="https://github.com/dshah02/upskill" class="button">
+            <span class="icon"><i class="fas fa-code"></i></span
+            ><span>Code</span>
+          </a>
+        </span>
+      </div>
+    </header>
 
-  <main>
-    <section>
-      <div class="summary">
-        <div style="display: flex; gap: 30px; align-items: center; margin-bottom: 40px;">
-          <div style="flex: 3;">
-            <img src="static/figures/MISL_demonstration.png" alt="Diverse Response Strategies" style="width: 100%; border-radius: 8px;" />
-            <p class="caption" style="margin-top: 19px; margin-left: 50px">
-              <b>Different strategies ($z$) produce semantically distinct approaches.</b> UpSkill trains models
-              to condition responses on a discrete latent $z$, where each $z$ corresponds to a reproducible reasoning strategy.
-            </p>
-          </div>
-          <div style="flex: 2;">
-            <img src="static/figures/gains_qwen.png" alt="Qwen Performance Results" style="width: 100%; border-radius: 8px;" />
-            <p class="caption" style="margin-top: -15px; margin-left: 40px">
-              <b>Token-level MISL improves multi-attempt accuracy</b> on GSM8K for Qwen 2.5-7B, 
-              achieving +3.6% in pass@k and +4.0% in plurality@k without degrading pass@1.
-            </p>
+    <main>
+      <section>
+        <div class="summary">
+          <div
+            style="
+              display: flex;
+              gap: 30px;
+              align-items: center;
+              margin-bottom: 40px;
+            "
+          >
+            <div style="flex: 3">
+              <img
+                src="static/figures/MISL_demonstration.png"
+                alt="Diverse Response Strategies"
+                style="width: 100%; border-radius: 8px"
+              />
+              <p class="caption" style="margin-top: 19px; margin-left: 50px">
+                <b
+                  >Different strategies ($z$) produce semantically distinct
+                  approaches.</b
+                >
+                UpSkill trains models to condition responses on a discrete
+                latent $z$, where each $z$ corresponds to a reproducible
+                reasoning strategy.
+              </p>
+            </div>
+            <div style="flex: 2">
+              <img
+                src="static/figures/gains_qwen.png"
+                alt="Qwen Performance Results"
+                style="width: 100%; border-radius: 8px"
+              />
+              <p class="caption" style="margin-top: -15px; margin-left: 40px">
+                <b>Token-level MISL improves multi-attempt accuracy</b> on GSM8K
+                for Qwen 2.5-7B, achieving +3.6% in pass@k and +4.0% in
+                plurality@k without degrading pass@1.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="abstract">
-        <h3>Abstract</h3>
+      <section>
+        <div class="abstract">
+          <h3>Abstract</h3>
+          <p>
+            Reinforcement Learning with Verifiable Rewards (RLVR) has improved
+            the reasoning abilities of large language models (LLMs) on
+            mathematics and programming tasks, often by maximizing pass@1
+            correctness. However, optimizing single-attempt accuracy can
+            inadvertently suppress response diversity across repeated attempts,
+            narrowing exploration and overlooking underrepresented strategies.
+            We introduce <b>UpSkill</b>, a training time method that adapts
+            Mutual Information Skill Learning (MISL) to LLMs to induce
+            structured response diversity: a discrete latent $z$ selects a
+            reproducible "strategy" that steers the token distribution toward
+            distinct modes. We propose a novel reward that we implement within
+            Group Relative Policy Optimization (GRPO): a token-level mutual
+            information (MI) reward that encourages trajectory specificity to
+            $z$. Experiments on GSM8K with three open-weight models—Llama
+            3.1–8B, Qwen 2.5–7B, and R1-Distilled–Qwen2.5–Math–1.5B—show that
+            UpSkill improves multi-attempt metrics for Qwen 2.5–7B, yielding
+            gains of ~4% in pass@k and ~4% in plurality@k without degrading
+            pass@1. Additionally, we prove that improvements in pass@k are
+            closely tied to the mutual information objective, providing a
+            theoretical justification for UpSkill.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>The UpSkill Method</h2>
         <p>
-          Reinforcement Learning with Verifiable Rewards (RLVR) has improved the reasoning abilities of large language 
-          models (LLMs) on mathematics and programming tasks, often by maximizing pass@1 correctness. However, optimizing 
-          single-attempt accuracy can inadvertently suppress response diversity across repeated attempts, narrowing 
-          exploration and overlooking underrepresented strategies. We introduce <b>UpSkill</b>, a training time method that 
-          adapts Mutual Information Skill Learning (MISL) to LLMs to induce structured response diversity: a discrete 
-          latent $z$ selects a reproducible "strategy" that steers the token distribution toward distinct modes. We propose 
-          a novel reward that we implement within Group Relative Policy Optimization (GRPO): a token-level mutual information 
-          (MI) reward that encourages trajectory specificity to $z$. Experiments on GSM8K with three open-weight models—Llama 
-          3.1–8B, Qwen 2.5–7B, and R1-Distilled–Qwen2.5–Math–1.5B—show that UpSkill improves multi-attempt metrics for Qwen 
-          2.5–7B, yielding gains of ~4% in pass@k and ~4% in plurality@k without degrading pass@1. Additionally, we prove 
-          that improvements in pass@k are closely tied to the mutual information objective, providing a theoretical 
-          justification for UpSkill.
+          In some NP settings such as code generation or formal proof
+          generation, LLMs are queried many times and each output is tested by a
+          verifier, such as a suite of unit tests or a proof verifier. As long
+          as at least one output is correct, the problem is solved, which
+          motivates the use of the <i>pass@k</i> objective in these RLVR
+          settings.
         </p>
-      </div>
-    </section>
+        <p>
+          Most traditional LLM training or fine-tuning methods optimize for
+          pass@1 objectives, which incentivizes always outputting the most
+          likely answer. Our method addresses the question of how we can design
+          diversity rewards that directly optimize for the pass@k objective.
+        </p>
+        <div class="building-blocks-grid">
+          <div class="block">
+            <h3>1. The Problem: Response Collapse</h3>
+            <p>
+              A model undergoing standard RLVR training with pass@1 objectives
+              optimizes for the trajectory that is considered most likely to be
+              correct. After RLVR training, this often leads to just one
+              dominant mode or strategy of solving a particular problem,
+              resulting in highly similar outputs across multiple attempts. This
+              reduces the effective number of independent attempts and limits
+              pass@k performance. Even if the model has multiple different
+              strategy modes, nothing forces the model to use a different mode
+              on every rollout. It is highly likely that sampling a mode
+              independently and uniformly at random for each trajectory, at
+              least two trajectories will have been sampled from the same
+              strategy mode.
+            </p>
+          </div>
 
-    <section>
-      <h2>The UpSkill Method</h2>
-      <div class="building-blocks-grid">
-        <div class="block">
-          <h3>1. The Problem: Response Collapse</h3>
-          <p>
-            Standard RLVR training with pass@1 objectives can lead to response collapse, where models produce 
-            highly similar outputs across multiple attempts. This reduces the effective number of independent 
-            attempts and limits pass@k performance. UpSkill addresses this by explicitly training for diversity 
-            while maintaining correctness.
-          </p>
-        </div>
+          <div class="block">
+            <h3>2. Mutual Information Objective</h3>
+            <p>
+              UpSkill addresses the issues with effective number of independent
+              attempts by adapting the skill discovery framework MISL to the LLM
+              setting, increasing <i>structured</i> diversity while maintaining
+              correctness. In particular, we maximize the token-level mutual
+              information between a discrete latent strategy $z$ and the
+              trajectory $\tau$. This simultaneously encourages high marginal
+              entropy for broad coverage of trajectory space, and low
+              conditional entropy given $z$ so each value of $z$ induces a
+              reproducible strategy.
+            </p>
+          </div>
 
-        <div class="block">
-          <h3>2. Mutual Information Objective</h3>
-          <p>
-            We maximize the mutual information $\mathcal{I}(\tau; z \mid x)$ between a discrete latent strategy 
-            $z \in \{1, \ldots, N\}$ and trajectories $\tau$. This encourages: (i) high marginal entropy 
-            $H(\tau \mid x)$ for broad coverage, and (ii) low conditional entropy $H(\tau \mid x, z)$ so each 
-            $z$ induces a reproducible mode.
-          </p>
-        </div>
+          <div class="block">
+            <h3>3. Reinforcement Learning Setup</h3>
+            <p>
+              We implement the MI objective through a token-level reward on the
+              per-token probabilities output by the model. This reward is
+              combined with correctness and KL penalties in GRPO training, and
+              we do some hyperparameter ablations to find the best weights for
+              each reward term. In evaluation, we take advantage of the
+              additional structure formed with our latent skill $z$ to query the
+              model with each different value of $z$ just once, which guarantees
+              that each strategy being queried is different and prevents
+              response collapse.
+            </p>
+          </div>
 
-        <div class="block">
-          <h3>3. Token-Level MI Reward</h3>
-          <p>
-            We implement the MI objective through a token-level reward:
-            <p style="font-size: 10pt;">$$r_{\text{TMI}}(\tau_i; x, z) = \sum_{t=1}^{|\tau|} \left[\log p_\pi(y_t \;|\; x, z, y_{\lt t}) - \log p_\pi(y_t \;|\; x, y_{\lt t})\right]$$</p>
-            where the second term is a uniform mixture over all strategies. This reward is combined with 
-            correctness and KL penalties in GRPO training.
-          </p>
-        </div>
-
-        <div class="block">
-          <h3>4. Theoretical Guarantee</h3>
-          <p>
-            We prove that pass@k improvement is bounded by mutual information:
-            <p style="font-size: 11pt;">$$1 - \exp\left(-C_1\eta^2\mathcal{I}(\tau; z \mid x)^2\right) \leq \frac{\text{pass@k}_M - \text{pass@k}_B}{1 - \text{pass@k}_B}$$</p>
-            This shows that maximizing MI provably improves multi-attempt success rates, providing theoretical 
-            justification for our approach.
-          </p>
-        </div>
-      </div>
-
-      <style>
-        .building-blocks-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 20px;
-          margin: 20px 0;
-          perspective: 1000px;
-        }
-
-        .block {
-          background-color: #f5f5f5;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          padding: 20px;
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-          transform-style: preserve-3d;
-        }
-
-        .block h3 {
-          color: #27579a;
-          margin-top: 0;
-        }
-
-        .block p {
-          margin-bottom: 0;
-        }
-
-        .block:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-      </style>
-    </section>
-
-    <section>
-      <h2>Experimental Results</h2>
-
-      <div class="yspace centered">
-        <div class="full-width margin"
-          style="width: 100%; margin: 0; display: flex; align-items: center; justify-content: center;">
-          <div style="width: 85%; margin: 0; text-align: center;">
-            <img src="static/figures/model_perf_rerun_adjusted.png" width="100%" />
+          <div class="block">
+            <h3>4. Theoretical Guarantees</h3>
+            <p>
+              Under some assumptions about the mixture distribution remaining
+              stationary, we prove that pass@k improvement is both upper and
+              lower bounded by the mutual information between $z$ and $\tau$.
+              The lower bound shows that maximizing MI provably improves
+              multi-attempt success rates, providing theoretical justification
+              for our approach. Moreover, the upper bound shows that increasing
+              MI is necessary for large pass@k improvements.
+            </p>
           </div>
         </div>
-        <p class="caption" style="width: 85%; margin: 20px auto; margin-top: 0px;">
-          <b>UpSkill improves multi-attempt metrics on GSM8K for Qwen 2.5-7B.</b>
-          Results show performances across pass@1, pass@k, plurality@k, and consensus@k metrics. The asterisk 
-          denotes $p \lt 0.02$ and $\dagger$ denotes $p \lt 0.06$ from McNemar's test comparing "With MI" vs "Without MI" conditions.
+
+        <style>
+          .building-blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+            perspective: 1000px;
+          }
+
+          .block {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+          }
+
+          .block h3 {
+            color: #27579a;
+            margin-top: 0;
+          }
+
+          .block p {
+            margin-bottom: 0;
+          }
+
+          .block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+          }
+        </style>
+      </section>
+
+      <section>
+        <h2>Experimental Results</h2>
+        <h3 style="text-align: center; color: #27579a">
+          Arithmetic Environment: Preventing Distribution Collapse
+        </h3>
+        <p>
+          This environment presents three single-digit integers and a latent
+          skill index $z\in\{0,1,\ldots,N-1\}$. A small transformer policy must
+          select one of the digits as the target, then generate a simple
+          arithmetic expression using the remaining two digits and an operation
+          (addition, subtraction, multiplication, division, or mod) that
+          evaluates exactly to that target value. Training uses GRPO and ablates
+          whether the mutual information reward term is used. The latent
+          variable $z$ is intended to induce different strategies, i.e.
+          distinct, repeatable operator and operand choices, so that distinct
+          values of $z$ produce diverse ways to hit the target.
         </p>
-      </div>
-
-      <hr style="width: 50%; margin: 40px auto; border: none; border-top: 1px solid #ddd;" />
-
-      <h3 style="text-align: center; color: #27579a;">Arithmetic Environment: Preventing Distribution Collapse</h3>
-      <div class="yspace centered">
-        <div class="full-width margin" style="width: 100%; margin: 0; display: flex; align-items: center;">
-          <div style="width: 55%; margin: 0;">
-            <img src="static/figures/digit_plots.png" width="100%" />
+        <div class="yspace centered">
+          <div
+            class="full-width margin"
+            style="width: 100%; margin: 0; display: flex; align-items: center"
+          >
+            <div style="width: 55%; margin: 0">
+              <img src="static/figures/digit_plots.png" width="100%" />
+            </div>
+            <p class="caption" style="width: 40%; margin-left: 5%">
+              <b>MISL prevents entropy collapse.</b><br />
+              Training curves show that under GRPO alone (blue), pass@1 and
+              pass@5 converge together, indicating multiple attempts provide
+              little benefit. With MISL (orange), pass@5 improves substantially
+              (+10%) while pass@1 remains modest, demonstrating that different
+              latents yield complementary solutions. Operator distributions show
+              distinct strategy specialization with MISL.
+            </p>
           </div>
-          <p class="caption" style="width: 40%; margin-left: 5%;">
-            <b>MISL prevents entropy collapse.</b><br />
-            Training curves show that under GRPO alone (blue), pass@1 and pass@5 converge together, 
-            indicating multiple attempts provide little benefit. With MISL (orange; N=5), pass@5 improves 
-            substantially (+10%) while pass@1 remains modest, demonstrating that different latents yield 
-            complementary solutions. Operator distributions show distinct strategy specialization with MISL.
+        </div>
+        <hr
+          style="
+            width: 50%;
+            margin: 40px auto;
+            border: none;
+            border-top: 1px solid #ddd;
+          "
+        />
+        <h3 style="text-align: center; color: #27579a">
+          LLM Fine-Tuning and Evaluation on GSM8K
+        </h3>
+        <p>
+          We train LoRA adapters with roughly 80M trainable parameters applied
+          to three open-weight base models - Llama-3.1-8B, Qwen-2.5-7B, and
+          R1-Distilled-Qwen2.5-Math-1.5B - using 2,000 training problems from
+          the GSM8K dataset. When fine-tuning with the latent skill variable,
+          its value is passed in at the beginning of the prompt before the
+          question is asked. Evaluation is conducted with 500 held-out examples,
+          with all experiments performed in a zero-shot setting and a 1024 token
+          maximum sequence length. In the graph below, "Base" refers to querying
+          the base models with no fine-tuning, while "Without MI" refers to
+          fine-tuning the base models only on the standard GRPO rewards. "With
+          MI" refers to fine-tuning with the UpSkill mutual information reward
+          on top of the standard GRPO rewards.
+        </p>
+        <div class="yspace centered">
+          <div
+            class="full-width margin"
+            style="
+              width: 100%;
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div style="width: 85%; margin: 0; text-align: center">
+              <img
+                src="static/figures/model_perf_rerun_adjusted.png"
+                width="100%"
+              />
+            </div>
+          </div>
+          <p
+            class="caption"
+            style="width: 85%; margin: 20px auto; margin-top: 0px"
+          >
+            <b
+              >UpSkill improves multi-attempt metrics on GSM8K for Qwen
+              2.5-7B.</b
+            >
+            Results show performances across pass@1, pass@k, plurality@k, and
+            consensus@k metrics. The asterisk denotes $p \lt 0.02$ and $\dagger$
+            denotes $p \lt 0.06$ from McNemar's test comparing "With MI" vs
+            "Without MI" conditions.
           </p>
         </div>
-      </div>
 
-      <hr style="width: 50%; margin: 40px auto; border: none; border-top: 1px solid #ddd;" />
+        <!-- <hr style="width: 50%; margin: 40px auto; border: none; border-top: 1px solid #ddd;" /> -->
 
-      <h3 style="text-align: center; color: #27579a;">Example: Diverse Reasoning Strategies</h3>
+        <!-- <h3 style="text-align: center; color: #27579a;">Example: Diverse Reasoning Strategies</h3>
       <div class="yspace centered">
         <div class="full-width margin"
           style="width: 100%; margin: 0; display: flex; align-items: center; justify-content: center;">
@@ -260,10 +412,10 @@
             <img src="static/figures/diverse_strategies_example.png" width="100%" />
           </div>
         </div>
-      </div>
-    </section>
+      </div> -->
+      </section>
 
-    <section>
+      <!-- <section>
       <h2>Key Findings</h2>
       <div class="findings-container">
         <ul class="key-findings">
@@ -272,12 +424,11 @@
             without degrading pass@1 accuracy.
           </li>
           <li>
-            Token-level mutual information reward successfully prevents response collapse during 
-            RLVR training while maintaining correctness.
+            In a controlled arithmetic environment, UpSkill improves pass@5 by +10% by developing 
+            diverse and complementary reasoning strategies.
           </li>
           <li>
-            In controlled arithmetic environments, UpSkill improves pass@5 by +10% by developing 
-            diverse and complementary reasoning strategies.
+            
           </li>
           <li>
             Theoretical analysis proves pass@k improvement is monotonically related to mutual 
@@ -321,21 +472,101 @@
           margin-bottom: 0;
         }
       </style>
-    </section>
+    </section> -->
 
-    <section>
-      <h2>
-        ${\bf B\kern-.05em{\small I\kern-.025em B}\kern-.08em
-        T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}$
-      </h2>
-      <pre class="language-bibtex bibtex" id="bibtex" onclick="selectContent('#bibtex')"><code>@article{shah2024upskill,
+      <section>
+        <h2>Open Questions and Future Directions</h2>
+        <div class="findings-container">
+          <ul class="key-findings">
+            <li>
+              <b>Stable Mutual Information Estimators:</b> The KSG estimator
+              used in our code is very unstable with a low number of samples
+              like we use, which is the setting we are using it in. Are there
+              other more accurate estimators or alternatively variational lower
+              bounds that lead to more stable training?
+            </li>
+            <li>
+              <b>Semantic Embeddings for Diversity:</b> Token-level MI rewards
+              often result in superficial formatting or paraphrase ordering
+              changes rather than semantically different strategies. Can we use
+              a text-to-embedding model and define a semantic MI reward to
+              encourage more meaningful diversity?
+            </li>
+            <li>
+              <b>Tsallis Entropy:</b> Is it possible to get more direct
+              guarantees on pass@k by optimizing for a reward function that uses
+              Tsallis entropy, which looks closely related to pass@k, instead of
+              Shannon entropy?
+            </li>
+            <li>
+              <b>More Complex Datasets:</b> In this work, LLMs were only
+              evaluated on GSM8K, which contains mostly basic problems that can
+              only be solved in one way. On more difficult datasets with
+              multiple possible strategies like MATH or HumanEval, does UpSkill
+              perform better on a wider variety of models?
+            </li>
+            <li>
+              <b>Relaxing Theoretical Assumptions:</b> The theory assumes that
+              the mixture distribution remains stationary even as individual
+              skill distributions change. Can we either relax this assumption
+              and still prove similar theoretical guarantees, or design a new
+              training procedure to enforce this assumption?
+            </li>
+            <li>
+              <b>Robust Skill Injection:</b> The current setup passes in the
+              latent skill variable as part of the LLM prompt, which is noisy if
+              the LLM has already learned specific meanings for these tokens.
+              Can we instead pass in the skills as embeddings that the LLM has
+              not yet learned?
+            </li>
+          </ul>
+        </div>
+
+        <style>
+          .findings-container {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px 30px;
+            margin: 20px 0;
+            width: 100%;
+            box-sizing: border-box;
+          }
+
+          .key-findings {
+            margin: 0;
+            padding-left: 25px;
+            columns: 2;
+            column-gap: 40px;
+          }
+
+          .key-findings li {
+            margin-bottom: 15px;
+            break-inside: avoid;
+          }
+
+          .key-findings li:last-child {
+            margin-bottom: 0;
+          }
+        </style>
+      </section>
+
+      <section>
+        <h2>
+          ${\bf B\kern-.05em{\small I\kern-.025em B}\kern-.08em
+          T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}$
+        </h2>
+        <pre
+          class="language-bibtex bibtex"
+          id="bibtex"
+          onclick="selectContent('#bibtex')"
+        ><code>@article{shah2024upskill,
     title     = {UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs},
     author    = {Shah, Devan and Yang, Owen and Yang, Daniel and Zheng, Chongyi and Eysenbach, Benjamin},
     journal   = {X},
     year      = {2025}
 }</code></pre>
-    </section>
-  </main>
-</body>
-
+      </section>
+    </main>
+  </body>
 </html>
