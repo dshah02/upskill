@@ -1,7 +1,14 @@
-from UNSLOTH_rewards import extract_hash_answer, SYSTEM_PROMPT
+
 from pathlib import Path
 from datasets import load_dataset
 import json
+
+
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
+
+from UNSLOTH_rewards import extract_hash_answer, SYSTEM_PROMPT
 
 dataset = load_dataset("openai/gsm8k", "main")
 
@@ -27,6 +34,9 @@ for item in dataset["test"]:
         "answer": extract_hash_answer(item["answer"]),
     }
     processed_gsm_test.append(processed_item)
+
+# Ensure the directory exists before writing files
+os.makedirs("./dataset_cache", exist_ok=True)
 
 with open("./dataset_cache/gsm8k_train.json", "w") as f:
     json.dump(processed_gsm_train, f)

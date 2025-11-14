@@ -13,7 +13,7 @@ model_name = args.model
 
 if "qwen" in model_name:
     model_name = "Qwen/Qwen2.5-7B-Instruct"
-    cache_dir = f"{os.environ['USER']}/cache/qwen-2-5-7b"
+    cache_dir = f"{os.environ['USER']}/cache/qwen-2-5-7b/"
 elif "r1" in model_name:
     model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
     cache_dir = f"{os.environ['USER']}/cache/r1-qwen"

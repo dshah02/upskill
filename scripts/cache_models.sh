@@ -34,13 +34,7 @@ python ../experiments/gsm8k/cache_for_offline.py --model r1-distilled
 
 # Download GSM8K dataset
 echo "Downloading GSM8K dataset..."
-python -c "
-from datasets import load_dataset
-dataset = load_dataset('gsm8k', 'main')
-print('GSM8K dataset cached successfully')
-print(f'Train set size: {len(dataset[\"train\"])}')
-print(f'Test set size: {len(dataset[\"test\"])}')
-"
+python ../experiments/gsm8k/cache_datasets.py
 
 echo "Model caching completed!"
 echo ""
