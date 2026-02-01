@@ -1,6 +1,6 @@
 from unsloth import FastLanguageModel
 import re
-
+import torch
 
 def load_model(cache_dir, max_seq_length, lora_rank, peft_apply=False):
     # Attempts to find model locally
@@ -218,5 +218,69 @@ def run_model(model, tokenizer, args, problem_text):
 
         extracted_answer = extract_answer(response)
         answers.append(extracted_answer)
+
+    return answers
+
+def run_model_coding(model, tokenizer, args, problem_text, base=True):
+    answers = []
+    max_strategy = int(args.get("max_strategy", 5))
+    num_times = int(args.get("num_times", 1))
+
+    for strat in range(max_strategy):
+        for _ in range(num_times):
+            if base:
+                strategy_prompt = problem_text
+            else:
+                strategy_prompt = f"Strategy {strat} | {problem_text}"
+
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a helpful assistant who writes correct, well-tested Python code. "
+                        "Generate only the Python code to complete the function described in the docstring. "
+                        "Do not include any explanations, introductory text, or natural language comments "
+                        "outside the function body."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": strategy_prompt,
+                },
+            ]
+
+            # Apply chat template
+            ids = tokenizer.apply_chat_template(
+                messages,
+                add_generation_prompt=True,
+                return_tensors="pt",
+            )
+
+            # Unsloth sometimes returns Tensor, sometimes a dict
+            if isinstance(ids, torch.Tensor):
+                model_inputs = {
+                    "input_ids": ids.to(model.device),
+                    "attention_mask": torch.ones_like(ids).to(model.device),
+                }
+            else:
+                # HF-style dict
+                model_inputs = {k: v.to(model.device) for k, v in ids.items()}
+
+            input_ids = model_inputs["input_ids"]
+
+            # Generate completion
+            outputs = model.generate(
+                **model_inputs,
+                max_new_tokens=1024,
+                temperature=0.7,
+                top_p=0.9,
+                do_sample=True,
+            )
+
+            # Slice off the prompt tokens, keep only generated tokens
+            generated_ids = outputs[0, input_ids.shape[1]:]
+            response = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
+
+            answers.append(response)
 
     return answers
