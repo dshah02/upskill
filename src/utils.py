@@ -15,7 +15,7 @@ def load_model(cache_dir, max_seq_length, lora_rank, peft_apply=False):
             max_lora_rank=lora_rank,
             gpu_memory_utilization=0.6,
             local_files_only=True,
-            trust_remote_code=True,
+            # trust_remote_code=True,
             use_safetensors=True,
         )
     except RuntimeError as e:
@@ -28,7 +28,7 @@ def load_model(cache_dir, max_seq_length, lora_rank, peft_apply=False):
             max_lora_rank=lora_rank,
             gpu_memory_utilization=0.6,
             local_files_only=True,
-            trust_remote_code=True,
+            # trust_remote_code=True,
         )
 
     if peft_apply:
@@ -52,7 +52,7 @@ def load_model(cache_dir, max_seq_length, lora_rank, peft_apply=False):
     return model, tokenizer
 
 
-def load_model_alt(base_model_path, model_path, max_seq_length):
+def load_model_alt(base_model_path, model_path, max_seq_length, is_trainable=False):
     try:
         # Check if this is a LoRA checkpoint (has adapter files)
         import os
@@ -74,15 +74,33 @@ def load_model_alt(base_model_path, model_path, max_seq_length):
                 load_in_4bit=False,
                 fast_inference=False,
                 local_files_only=True,
-                trust_remote_code=True,
+                # trust_remote_code=True,
                 device_map="auto",
             )
             
             # Load LoRA adapter
             from peft import PeftModel
-            model = PeftModel.from_pretrained(model, model_path)
+            model = PeftModel.from_pretrained(model, model_path, is_trainable=is_trainable)
+            
+            if is_trainable:
+                print("Explicitly making LoRA parameters trainable...")
+                for name, param in model.named_parameters():
+                    if "lora" in name:
+                        param.requires_grad = True
+                
+                # Critical for training with LoRA/adapters to ensure gradients propagate from inputs
+                if hasattr(model, "enable_input_require_grads"):
+                    model.enable_input_require_grads()
+                else:
+                    def make_inputs_require_grad(module, input, output):
+                        output.requires_grad_(True)
+                    model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+                
+                model.train()
+                model.print_trainable_parameters()
         else:
             # Regular model loading
+            print("Loading model without LoRA adapter.")
             model, tokenizer = FastLanguageModel.from_pretrained(
                 model_name=model_path,
                 max_seq_length=max_seq_length,
@@ -90,7 +108,7 @@ def load_model_alt(base_model_path, model_path, max_seq_length):
                 fast_inference=False,
                 gpu_memory_utilization=0.3,
                 local_files_only=True,
-                trust_remote_code=True,
+                # trust_remote_code=True,
                 device_map="auto",
             )
     except Exception as e:

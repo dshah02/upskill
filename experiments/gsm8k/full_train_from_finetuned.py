@@ -38,7 +38,7 @@ from UNSLOTH_rewards import (
 
 from flex_rewards_adapter import math_correctness_func
 
-from utils import load_model
+import utils
 from utils import (
     extract_strategy_idx,
     replace_strategy_idx,
@@ -129,25 +129,28 @@ if "qwen" == model_name:
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
         raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
-    cache_dir = snapshot_dirs[0]
+    cache_dir = f"{store_dir}/{model_name}"
+    lora_dir = "/scratch/gpfs/EHAZAN/oy3975/models/Qwen2.5-7B/gsm8k/5_0.0_0_0_1_0_8513/final_model"
 elif "r1-qwen" == model_name:
     model_name = "models--unsloth--deepseek-r1-distill-qwen-1.5b-bnb-4bit"  # works but says 5b
     snapshot_glob = f"{store_dir}/{model_name}/snapshots/*/"
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
         raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
-    cache_dir = snapshot_dirs[0]
+    cache_dir = f"{store_dir}/{model_name}"
+    lora_dir = "/scratch/gpfs/EHAZAN/oy3975/models/DeepSeek-R1-Distill-Qwen-1.5B/gsm8k/5_0.0_0_0_1_0_5548/final_model"
 else:
     model_name = "models--unsloth--meta-llama-3.1-8b-instruct-unsloth-bnb-4bit"
     snapshot_glob = f"{store_dir}/{model_name}/snapshots/*/"
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
         raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
-    cache_dir = snapshot_dirs[0]
+    cache_dir = f"{store_dir}/{model_name}"
+    lora_dir = "/scratch/gpfs/EHAZAN/oy3975/models/meta-Llama-3.1-8B-Instruct/gsm8k/5_0.0_0_0_1_0_6457/final_model"
     # cache_dir = "/scratch/gpfs/EHAZAN/oy3975/cache/llama-3-1-8b"
 
-model, tokenizer = load_model(cache_dir, max_seq_length, lora_rank, peft_apply=True)
-ref_model, ref_tokenizer = load_model(cache_dir, max_seq_length, lora_rank, peft_apply=True)
+model, tokenizer = utils.load_model_alt(cache_dir, lora_dir, max_seq_length, is_trainable=True)
+# ref_model, ref_tokenizer = load_model_alt(cache_dir, lora_dir, max_seq_length)
 
 # ----------------- Dataset -----------------
 if dataset == "gsm8k":
@@ -184,7 +187,7 @@ def get_log_probability(prompt, completion, ref=False):
     combined_tokens = curr_tokenizer.encode(combined_input, add_special_tokens=False)
     input_ids = torch.tensor([combined_tokens]).to(curr_model.device)
 
-    with ctx:
+    with torch.no_grad():
         os_set = False
         if "UNSLOTH_RETURN_HIDDEN_STATES" in os.environ:
             os_set = True
@@ -233,26 +236,25 @@ def mi_reward(completions, prompts, answer, **kwargs):
     questions = [prompt[1]["content"] for prompt in prompts]
 
     rewards = []
-    with torch.no_grad():
-        for i in range(len(contents)):  # TODO: parallelize
-            y = contents[i]
-            q_with_z = questions[i]
+    for i in range(len(contents)):  # TODO: parallelize
+        y = contents[i]
+        q_with_z = questions[i]
 
-            # Which strategy z generated this prompt?
-            z_idx = extract_strategy_idx(q_with_z)
+        # Which strategy z generated this prompt?
+        z_idx = extract_strategy_idx(q_with_z)
 
-            # Compute log P_z(y|x,z) for all z
-            logps = _compute_skill_logprobs(q_with_z, y)
-            # Map Z -> log P_z
-            skill_to_logp = {z: lp for z, lp in zip(Z, logps)}
+        # Compute log P_z(y|x,z) for all z
+        logps = _compute_skill_logprobs(q_with_z, y)
+        # Map Z -> log P_z
+        skill_to_logp = {z: lp for z, lp in zip(Z, logps)}
 
-            # log P_{z_idx}(y|x,z_idx)
-            log_p_z = skill_to_logp[z_idx]
-            # log \bar P(y|x)
-            log_mix = _log_mixture_from_logps(logps)
+        # log P_{z_idx}(y|x,z_idx)
+        log_p_z = skill_to_logp[z_idx]
+        # log \bar P(y|x)
+        log_mix = _log_mixture_from_logps(logps)
 
-            reward = alpha_mi * (log_p_z - log_mix)
-            rewards.append(reward)
+        reward = alpha_mi * (log_p_z - log_mix)
+        rewards.append(reward)
 
     return rewards
 
@@ -468,7 +470,7 @@ standard_reward_funcs = [
     # xmlcount_reward_func,
     # soft_format_reward_func,
     # strict_format_reward_func,
-    batch_correctness_reward_func,
+    # batch_correctness_reward_func,
 ]
 
 trainer = StrategyGroupedGRPOTrainer(
