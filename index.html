@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -136,17 +136,16 @@
             <div style="flex: 3">
               <img
                 src="static/figures/MISL_demonstration.png"
-                alt="Diverse Response Strategies"
+                alt="MISL Reward Dynamics"
                 style="width: 100%; border-radius: 8px"
               />
               <p class="caption" style="margin-top: 19px; margin-left: 50px">
-                <b
-                  >Different strategies ($z$) produce semantically distinct
-                  approaches.</b
-                >
-                UpSkill trains models to condition responses on a discrete
-                latent $z$, where each $z$ corresponds to a reproducible
-                reasoning strategy.
+                <b>How the MISL reward improves pass@k performance.</b>
+                Before MISL (left), the trajectory distribution is independent
+                of the latents $z$, so the conditional entropy is close to the
+                marginal. Adding the token-level MI reward (right) yields
+                well-separated clusters indexed by $z$, reducing conditional
+                entropy while preserving high marginal entropy.
               </p>
             </div>
             <div style="flex: 2">
@@ -156,9 +155,9 @@
                 style="width: 100%; border-radius: 8px"
               />
               <p class="caption" style="margin-top: -15px; margin-left: 40px">
-                <b>Token-level MISL improves multi-attempt accuracy</b> on GSM8K
-                for Qwen 2.5-7B, achieving +3.6% in pass@k and +4.0% in
-                plurality@k without degrading pass@1.
+                <b>UpSkill improves mean multi-attempt accuracy</b> without
+                hurting single-attempt accuracy on GSM8K for Qwen 2.5-7B,
+                achieving +3.4% in pass@k and +9.1% in plurality@k.
               </p>
             </div>
           </div>
@@ -171,24 +170,22 @@
           <p>
             Reinforcement Learning with Verifiable Rewards (RLVR) has improved
             the reasoning abilities of large language models (LLMs) on
-            mathematics and programming tasks, often by maximizing pass@1
-            correctness. However, optimizing single-attempt accuracy can
-            inadvertently suppress response diversity across repeated attempts,
-            narrowing exploration and overlooking underrepresented strategies.
-            We introduce <b>UpSkill</b>, a training time method that adapts
-            Mutual Information Skill Learning (MISL) to LLMs to induce
-            structured response diversity: a discrete latent $z$ selects a
-            reproducible "strategy" that steers the token distribution toward
-            distinct modes. We propose a novel reward that we implement within
+            mathematics and programming tasks, but standard approaches that
+            optimize single-attempt accuracy can inadvertently suppress response
+            diversity across repeated attempts, narrowing exploration and
+            overlooking underrepresented strategies. We introduce
+            <b>UpSkill</b>, a training time method that adapts Mutual
+            Information Skill Learning (MISL) to LLMs for optimizing pass@k
+            correctness. We propose a novel reward that we implement within
             Group Relative Policy Optimization (GRPO): a token-level mutual
             information (MI) reward that encourages trajectory specificity to
-            $z$. Experiments on GSM8K with three open-weight models—Llama
-            3.1–8B, Qwen 2.5–7B, and R1-Distilled–Qwen2.5–Math–1.5B—show that
-            UpSkill improves multi-attempt metrics for Qwen 2.5–7B, yielding
-            gains of ~4% in pass@k and ~4% in plurality@k without degrading
-            pass@1. Additionally, we prove that improvements in pass@k are
-            closely tied to the mutual information objective, providing a
-            theoretical justification for UpSkill.
+            $z$. Experiments on GSM8K with three open-weight models, Llama
+            3.1–8B, Qwen 2.5–7B, and R1-Distilled–Qwen2.5–Math–1.5B, show that
+            UpSkill improves multi-attempt metrics on the stronger base models,
+            yielding mean gains of ~3% in pass@k for both Qwen and Llama without
+            degrading pass@1. Additionally, we find both empirical and
+            theoretical evidence that improvements in pass@k are closely tied to
+            the mutual information objective.
           </p>
         </div>
       </section>
@@ -381,8 +378,132 @@
             "
           >
             <div style="width: 85%; margin: 0; text-align: center">
+              <img src="static/figures/model_perf_upskill.png" width="100%" />
+            </div>
+          </div>
+          <p
+            class="caption"
+            style="width: 85%; margin: 20px auto; margin-top: 0px"
+          >
+            <b>Performance on 500 held-out problems with $N$=5 strategies.</b>
+            We observe gains on all metrics for the Qwen model. Base refers to
+            the model before GRPO training, Without MI refers to after GRPO
+            training without token MI, and With MI refers to training with
+            correctness rewards and token MI.
+          </p>
+        </div>
+
+        <div style="width: 85%; margin: 30px auto">
+          <table class="results-table">
+            <caption>
+              <b>Improvement in pass@k relative to the base model for MI-based methods.</b>
+            </caption>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Method</th>
+                <th>$\Delta$pass@k</th>
+                <th>Method</th>
+                <th>$\Delta$pass@k</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="2">Qwen</td>
+                <td>Correctness</td>
+                <td>+3.8%</td>
+                <td>MI</td>
+                <td>+5.2%</td>
+              </tr>
+              <tr>
+                <td>MI + correctness</td>
+                <td><b>+7.0%</b></td>
+                <td>MI + KL</td>
+                <td>+4.0%</td>
+              </tr>
+              <tr>
+                <td rowspan="2">Llama</td>
+                <td>Correctness</td>
+                <td>+2.8%</td>
+                <td>MI</td>
+                <td>+0.8%</td>
+              </tr>
+              <tr>
+                <td>MI + correctness</td>
+                <td><b>+3.6%</b></td>
+                <td>MI + KL</td>
+                <td>+2.4%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <style>
+          .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+            margin-top: 10px;
+          }
+
+          .results-table caption {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+          }
+
+          .results-table th,
+          .results-table td {
+            border: 1px solid #ddd;
+            padding: 8px 14px;
+            text-align: center;
+          }
+
+          .results-table th {
+            background-color: #27579a;
+            color: white;
+            font-weight: 600;
+          }
+
+          .results-table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+          }
+
+          .results-table tbody tr:hover {
+            background-color: #eef3fa;
+          }
+        </style>
+
+        <hr
+          style="
+            width: 50%;
+            margin: 40px auto;
+            border: none;
+            border-top: 1px solid #ddd;
+          "
+        />
+        <h3 style="text-align: center; color: #27579a">
+          Ablations and Training Dynamics
+        </h3>
+        <p>
+          We observe from training graphs that the model usually learns to
+          maximize mutual information within a span of 250 training steps. We
+          evaluate directly before and after this span and find that most of the
+          eventual improvement in pass@k happens in this range.
+        </p>
+        <div class="yspace centered">
+          <div
+            class="full-width margin"
+            style="
+              width: 100%;
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div style="width: 70%; margin: 0; text-align: center">
               <img
-                src="static/figures/model_perf_rerun_adjusted.png"
+                src="static/figures/pass_k_accuracy_dotted_v2.png"
                 width="100%"
               />
             </div>
@@ -392,17 +513,13 @@
             style="width: 85%; margin: 20px auto; margin-top: 0px"
           >
             <b
-              >UpSkill improves multi-attempt metrics on GSM8K for Qwen
-              2.5-7B.</b
+              >GSM8K pass@5 scores over selected checkpoints of two training
+              processes,</b
             >
-            Results show performances across pass@1, pass@k, plurality@k, and
-            consensus@k metrics. The asterisk denotes $p \lt 0.02$ and $\dagger$
-            denotes $p \lt 0.06$ from McNemar's test comparing "With MI" vs
-            "Without MI" conditions.
+            overlaid on the mutual information rewards during training. The
+            tuples in the legend are of the form ($\alpha_1$, lr).
           </p>
         </div>
-
-        <!-- <hr style="width: 50%; margin: 40px auto; border: none; border-top: 1px solid #ddd;" /> -->
 
         <!-- <h3 style="text-align: center; color: #27579a;">Example: Diverse Reasoning Strategies</h3>
       <div class="yspace centered">
@@ -479,13 +596,6 @@
         <div class="findings-container">
           <ul class="key-findings">
             <li>
-              <b>Stable Mutual Information Estimators:</b> The KSG estimator
-              used in our code is very unstable with a low number of samples
-              like we use, which is the setting we are using it in. Are there
-              other more accurate estimators or alternatively variational lower
-              bounds that lead to more stable training?
-            </li>
-            <li>
               <b>Semantic Embeddings for Diversity:</b> Token-level MI rewards
               often result in superficial formatting or paraphrase ordering
               changes rather than semantically different strategies. Can we use
@@ -502,8 +612,8 @@
               <b>More Complex Datasets:</b> In this work, LLMs were only
               evaluated on GSM8K, which contains mostly basic problems that can
               only be solved in one way. On more difficult datasets with
-              multiple possible strategies like MATH or HumanEval, does UpSkill
-              perform better on a wider variety of models?
+              multiple possible strategies, does UpSkill perform better on a
+              wider variety of models?
             </li>
             <li>
               <b>Relaxing Theoretical Assumptions:</b> The theory assumes that
@@ -560,11 +670,11 @@
           class="language-bibtex bibtex"
           id="bibtex"
           onclick="selectContent('#bibtex')"
-        ><code>@article{shah2024upskill,
+        ><code>@inproceedings{shah2025upskill,
     title     = {UpSkill: Mutual Information Skill Learning for Structured Response Diversity in LLMs},
     author    = {Shah, Devan and Yang, Owen and Yang, Daniel and Zheng, Chongyi and Eysenbach, Benjamin},
-    journal   = {X},
-    year      = {2025}
+    booktitle = {Submitted to ICML 2026},
+    year      = {2026}
 }</code></pre>
       </section>
     </main>
