@@ -1,0 +1,9 @@
+max_seq_length: 1024
+lora_rank: 32
+alpha_mi: 5.0
+max_z: 5
+steps: 100
+lr: 3e-5
+temperature: 1.0
+model: qwen
+dataset: math
