@@ -3,3 +3,4 @@ lora_rank: 32
 alpha_mi: 10.0
 max_z: 5 
 steps: 2000
+temperature: 1.0

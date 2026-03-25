@@ -4,3 +4,4 @@ alpha_mi: 5.0
 max_z: 5 
 steps: 500
 lr: 3e-5
+temperature: 1.0

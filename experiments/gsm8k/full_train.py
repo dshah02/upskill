@@ -109,6 +109,7 @@ print("pass_reward_factor", config.get("pass_reward_factor", 0))
 print("max_z", config["max_z"])
 print("steps", config.get("steps", 250))
 print("lr", config.get("lr", 1e-4))
+print("temperature", config.get("temperature", 1.0))
 print("dataset", config.get("dataset", "gsm8k"))
 
 alpha_mi = config.get("alpha_mi", 0)
@@ -127,6 +128,7 @@ pass_reward_factor = config.get("pass_reward_factor", 0)
 Z = list(range(1, config["max_z"] + 1))
 steps = config.get("steps", 250)
 lr = float(config.get("lr", 1e-4))
+temperature = float(config.get("temperature", 1.0))
 model_name = config.get("model", args.model)
 dataset = config.get("dataset", "gsm8k")
 if dataset not in ["gsm8k", "math"]:
@@ -483,6 +485,7 @@ training_args = GRPOConfig(
     output_dir=base_out_dir,
     hub_model_id=None,
     push_to_hub=False,
+    temperature=temperature,
 )
 
 print("starting training")
