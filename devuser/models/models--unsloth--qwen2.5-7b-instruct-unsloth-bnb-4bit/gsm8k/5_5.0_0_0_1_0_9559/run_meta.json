@@ -1,0 +1,9 @@
+{
+  "run_id": 9559,
+  "model_name": "models--unsloth--qwen2.5-7b-instruct-unsloth-bnb-4bit",
+  "timestamp": 1774409829,
+  "args": {
+    "config": "./experiments/gsm8k/config_qwen_experimental.yaml",
+    "model": "qwen"
+  }
+}

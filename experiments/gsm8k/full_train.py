@@ -63,11 +63,24 @@ parser.add_argument(
     default=f"{os.environ['USER']}",
     help="Base directory to store model outputs and logs"
 )
+parser.add_argument(
+    "--model_dir",
+    type=str,
+    default=None,
+    help="Directory containing cached HF hub models (hub cache root)"
+)
+parser.add_argument(
+    "--seed",
+    type=int,
+    default=0,
+    help="Fixed seed for reproducibility"
+)
 
 args = parser.parse_args()
 store_dir = args.store_dir
+model_dir = args.model_dir
 # ----------------- Seeding -----------------
-FIXED_SEED = 0
+FIXED_SEED = args.seed
 random.seed(FIXED_SEED)
 torch.manual_seed(FIXED_SEED)
 torch.cuda.manual_seed_all(FIXED_SEED)
@@ -120,40 +133,50 @@ if dataset not in ["gsm8k", "math"]:
     raise ValueError("Dataset must be either 'gsm8k' or 'math'")
 dataset_text = dataset
 
-store_dir = "/scratch/gpfs/EHAZAN/oy3975/.cache/hub"
-
 # ----------------- Snapshots -----------------
+# Use model_dir as the HF hub cache root; fall back to store_dir if model_dir not provided
+_hub_root = model_dir if model_dir else store_dir
+
 if "qwen" == model_name:
     model_name = "models--unsloth--qwen2.5-7b-instruct-unsloth-bnb-4bit"
-    snapshot_glob = f"{store_dir}/{model_name}/snapshots/*/"
+    snapshot_glob = f"{_hub_root}/{model_name}/snapshots/*/"
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
-        raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
+        # Try flexible glob for variant naming
+        for pattern in [
+            f"{_hub_root}/models--unsloth--*qwen*2.5*7b*4bit*/snapshots/*/",
+            f"{_hub_root}/models--unsloth--*Qwen*2.5*7B*4bit*/snapshots/*/",
+        ]:
+            snapshot_dirs = glob.glob(pattern)
+            if snapshot_dirs:
+                break
+    if not snapshot_dirs:
+        raise FileNotFoundError(f"No snapshot directory found for {model_name} in {_hub_root}")
     cache_dir = snapshot_dirs[0]
 elif "r1-qwen" == model_name:
     model_name = "models--unsloth--deepseek-r1-distill-qwen-1.5b-bnb-4bit"  # works but says 5b
-    snapshot_glob = f"{store_dir}/{model_name}/snapshots/*/"
+    snapshot_glob = f"{_hub_root}/{model_name}/snapshots/*/"
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
         raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
     cache_dir = snapshot_dirs[0]
 else:
     model_name = "models--unsloth--meta-llama-3.1-8b-instruct-unsloth-bnb-4bit"
-    snapshot_glob = f"{store_dir}/{model_name}/snapshots/*/"
+    snapshot_glob = f"{_hub_root}/{model_name}/snapshots/*/"
     snapshot_dirs = glob.glob(snapshot_glob)
     if not snapshot_dirs:
         raise FileNotFoundError(f"No snapshot directory found for {model_name} in {snapshot_glob}")
     cache_dir = snapshot_dirs[0]
-    # cache_dir = "/scratch/gpfs/EHAZAN/oy3975/cache/llama-3-1-8b"
 
 model, tokenizer = load_model(cache_dir, max_seq_length, lora_rank, peft_apply=True)
 ref_model, ref_tokenizer = load_model(cache_dir, max_seq_length, lora_rank, peft_apply=True)
 
 # ----------------- Dataset -----------------
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 if dataset == "gsm8k":
-    filepath = "./dataset_cache/gsm8k_train.json"
+    filepath = os.path.join(_project_root, "dataset_cache", "gsm8k_train.json")
 else:
-    filepath = "./dataset_cache/math_train.json"
+    filepath = os.path.join(_project_root, "dataset_cache", "math_train.json")
 
 with open(filepath, "r") as f:
     dataset_data = json.load(f)

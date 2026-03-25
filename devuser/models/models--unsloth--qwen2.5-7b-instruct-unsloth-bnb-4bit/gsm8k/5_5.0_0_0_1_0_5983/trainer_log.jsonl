@@ -1,0 +1,1 @@
+{"step": 1, "epoch": 0.00013381506757660912, "time": 1774407805, "loss": -0.0, "grad_norm": 0.04720168560743332, "learning_rate": 0.0, "rewards/batch_correctness_reward_func": 1.0, "rewards/mi_reward": -0.28235527873039246, "reward": 0.7176447510719299, "reward_std": 1.4202799797058105, "completion_length": 350.0333557128906, "kl": 0.0}

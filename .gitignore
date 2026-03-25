@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Model weights and large binaries
+*.safetensors
+*.pt
+*.pth
+*.bin
+
+# Compiled/cache directories
+unsloth_compiled_cache/
+
+# HuggingFace cache
+.cache/

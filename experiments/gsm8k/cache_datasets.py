@@ -36,10 +36,12 @@ for item in dataset["test"]:
     processed_gsm_test.append(processed_item)
 
 # Ensure the directory exists before writing files
-os.makedirs("./dataset_cache", exist_ok=True)
+_project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+_cache_dir = os.path.join(_project_root, "dataset_cache")
+os.makedirs(_cache_dir, exist_ok=True)
 
-with open("./dataset_cache/gsm8k_train.json", "w") as f:
+with open(os.path.join(_cache_dir, "gsm8k_train.json"), "w") as f:
     json.dump(processed_gsm_train, f)
 
-with open("./dataset_cache/gsm8k_test.json", "w") as f:
+with open(os.path.join(_cache_dir, "gsm8k_test.json"), "w") as f:
     json.dump(processed_gsm_test, f)

@@ -1,0 +1,102 @@
+  0%|          | 0/500 [00:00<?, ?it/s]  0%|          | 1/500 [00:27<3:52:26, 27.95s/it]                                                   0%|          | 1/500 [00:27<3:52:26, 27.95s/it]  0%|          | 2/500 [01:13<5:19:16, 38.47s/it]                                                   0%|          | 2/500 [01:13<5:19:16, 38.47s/it]  1%|          | 3/500 [01:46<4:56:01, 35.74s/it]                                                   1%|          | 3/500 [01:46<4:56:01, 35.74s/it]  1%|          | 4/500 [02:15<4:35:29, 33.32s/it]                                                   1%|          | 4/500 [02:15<4:35:29, 33.32s/it]  1%|1         | 5/500 [02:43<4:16:31, 31.09s/it]                                                   1%|1         | 5/500 [02:43<4:16:31, 31.09s/it]  1%|1         | 6/500 [03:18<4:28:26, 32.60s/it]                                                   1%|1         | 6/500 [03:18<4:28:26, 32.60s/it]  1%|1         | 7/500 [03:51<4:28:21, 32.66s/it]                                                   1%|1         | 7/500 [03:51<4:28:21, 32.66s/it]  2%|1         | 8/500 [04:14<4:02:22, 29.56s/it]                                                   2%|1         | 8/500 [04:14<4:02:22, 29.56s/it]  2%|1         | 9/500 [04:39<3:50:48, 28.21s/it]                                                   2%|1         | 9/500 [04:39<3:50:48, 28.21s/it]  2%|2         | 10/500 [05:10<3:56:50, 29.00s/it]                                                    2%|2         | 10/500 [05:10<3:56:50, 29.00s/it]  2%|2         | 11/500 [05:35<3:47:30, 27.92s/it]                                                    2%|2         | 11/500 [05:35<3:47:30, 27.92s/it]  2%|2         | 12/500 [06:04<3:48:09, 28.05s/it]                                                    2%|2         | 12/500 [06:04<3:48:09, 28.05s/it]  3%|2         | 13/500 [06:31<3:45:06, 27.73s/it]                                                    3%|2         | 13/500 [06:31<3:45:06, 27.73s/it]  3%|2         | 14/500 [06:55<3:35:41, 26.63s/it]                                                    3%|2         | 14/500 [06:55<3:35:41, 26.63s/it]  3%|3         | 15/500 [07:25<3:44:31, 27.78s/it]                                                    3%|3         | 15/500 [07:25<3:44:31, 27.78s/it]  3%|3         | 16/500 [07:51<3:40:10, 27.30s/it]                                                    3%|3         | 16/500 [07:51<3:40:10, 27.30s/it]  3%|3         | 17/500 [08:16<3:34:25, 26.64s/it]                                                    3%|3         | 17/500 [08:16<3:34:25, 26.64s/it]  4%|3         | 18/500 [08:43<3:34:01, 26.64s/it]                                                    4%|3         | 18/500 [08:43<3:34:01, 26.64s/it]  4%|3         | 19/500 [09:23<4:06:28, 30.75s/it]                                                    4%|3         | 19/500 [09:23<4:06:28, 30.75s/it]  4%|4         | 20/500 [09:52<4:01:07, 30.14s/it]                                                    4%|4         | 20/500 [09:52<4:01:07, 30.14s/it]  4%|4         | 21/500 [10:23<4:02:18, 30.35s/it]                                                    4%|4         | 21/500 [10:23<4:02:18, 30.35s/it]  4%|4         | 22/500 [10:45<3:41:17, 27.78s/it]                                                    4%|4         | 22/500 [10:45<3:41:17, 27.78s/it]  5%|4         | 23/500 [11:08<3:29:49, 26.39s/it]                                                    5%|4         | 23/500 [11:08<3:29:49, 26.39s/it]  5%|4         | 24/500 [11:31<3:21:00, 25.34s/it]                                                    5%|4         | 24/500 [11:31<3:21:00, 25.34s/it]  5%|5         | 25/500 [11:58<3:25:37, 25.97s/it]                                                    5%|5         | 25/500 [11:58<3:25:37, 25.97s/it]  5%|5         | 26/500 [12:25<3:27:07, 26.22s/it]                                                    5%|5         | 26/500 [12:25<3:27:07, 26.22s/it]  5%|5         | 27/500 [12:50<3:23:46, 25.85s/it]                                                    5%|5         | 27/500 [12:50<3:23:46, 25.85s/it]  6%|5         | 28/500 [13:15<3:21:54, 25.67s/it]                                                    6%|5         | 28/500 [13:15<3:21:54, 25.67s/it]  6%|5         | 29/500 [13:39<3:17:00, 25.10s/it]                                                    6%|5         | 29/500 [13:39<3:17:00, 25.10s/it][rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/devuser/upskill/experiments/gsm8k/full_train.py", line 506, in <module>
+[rank0]:     ],
+[rank0]: ^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/transformers/trainer.py", line 2245, in train
+[rank0]:     return inner_training_loop(
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "<string>", line 314, in _fast_inner_training_loop
+[rank0]:   File "<string>", line 25, in _unsloth_training_step
+[rank0]:   File "/home/devuser/upskill/experiments/gsm8k/full_train.py", line 385, in _prepare_inputs
+[rank0]:     for z in Z:
+[rank0]:        ^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/unsloth_compiled_cache/UnslothGRPOTrainer.py", line 1034, in _prepare_inputs
+[rank0]:     output_reward_func = reward_func(prompts=prompts, completions=completions, **reward_kwargs)
+[rank0]:                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/experiments/gsm8k/full_train.py", line 262, in mi_reward
+[rank0]:     q_with_z = questions[i]
+[rank0]:             ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/experiments/gsm8k/full_train.py", line 232, in _compute_skill_logprobs
+[rank0]:     and a completion, compute log P_z(y | x,z) for all z in Z.
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/experiments/gsm8k/full_train.py", line 209, in get_log_probability
+[rank0]:     
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/models/llama.py", line 1200, in PeftModelForCausalLM_fast_forward
+[rank0]:     return self.base_model(
+[rank0]:            ^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py", line 193, in forward
+[rank0]:     return self.model.forward(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/models/llama.py", line 1043, in _CausalLM_fast_forward
+[rank0]:     outputs = self.model(
+[rank0]:               ^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/models/llama.py", line 858, in LlamaModel_fast_forward
+[rank0]:     layer_outputs = torch.utils.checkpoint.checkpoint(
+[rank0]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/_compile.py", line 32, in inner
+[rank0]:     return disable_fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 745, in _fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth_zoo/gradient_checkpointing.py", line 747, in unsloth_checkpoint
+[rank0]:     return UnslothCheckpointFunction.apply(function, preserve, *args)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/autograd/function.py", line 575, in apply
+[rank0]:     return super().apply(*args, **kwargs)  # type: ignore[misc]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth_zoo/gradient_checkpointing.py", line 463, in forward
+[rank0]:     outputs = run_function(*args)
+[rank0]:               ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/models/llama.py", line 855, in custom_forward
+[rank0]:     return module(*inputs, past_key_value, output_attentions, padding_mask = padding_mask, position_embeddings = position_embeddings)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/models/llama.py", line 542, in LlamaDecoderLayer_fast_forward
+[rank0]:     hidden_states = fast_rms_layernorm(self.input_layernorm, hidden_states)
+[rank0]:                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 745, in _fn
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/kernels/rms_layernorm.py", line 215, in fast_rms_layernorm
+[rank0]:     out = Fast_RMS_Layernorm.apply(X, W, eps, gemma)
+[rank0]:           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/torch/autograd/function.py", line 575, in apply
+[rank0]:     return super().apply(*args, **kwargs)  # type: ignore[misc]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/unsloth/kernels/rms_layernorm.py", line 160, in forward
+[rank0]:     fx[(n_rows,)](
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 330, in <lambda>
+[rank0]:     return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/triton/runtime/jit.py", line 652, in run
+[rank0]:     launch_metadata = kernel.launch_metadata(grid, stream, *non_constexpr_vals)
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/devuser/upskill/.venv/lib/python3.12/site-packages/triton/compiler/compiler.py", line 393, in __getattribute__
+[rank0]:     def __getattribute__(self, name):
+
+[rank0]: KeyboardInterrupt
+  6%|5         | 29/500 [14:09<3:50:03, 29.31s/it]
