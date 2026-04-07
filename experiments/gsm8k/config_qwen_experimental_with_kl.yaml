@@ -1,0 +1,8 @@
+max_seq_length: 1024
+lora_rank: 32
+alpha_mi: 5.0
+alpha_mixkl: 0.5
+individual_reward_factor: 0
+max_z: 5 
+steps: 2000
+lr: 1e-5

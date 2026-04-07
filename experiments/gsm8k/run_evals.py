@@ -26,6 +26,7 @@ from tqdm import tqdm
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src")))
 
 from flex_extract import ExtractConfig, extract_numeric_answer, normalize_answer
+from utils import load_model_alt
 from unsloth import FastLanguageModel
 
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
@@ -391,14 +392,12 @@ if __name__ == "__main__":
         print(f"Diversity penalty: {args.diversity_penalty}")
 
     print("Loading model...")
-    # Detect if base model is pre-quantized (bnb-4bit in name)
-    load_4bit = "bnb-4bit" in args.base_model_path
-    import glob as _glob
-    snapshot_dirs = _glob.glob(f"{args.base_model_path}/snapshots/*/")
-    base_dir = snapshot_dirs[0] if snapshot_dirs else args.base_model_path
-
     if args.decoding == "dbs":
         # Beam search needs vanilla transformers (Unsloth patches break _reorder_cache)
+        load_4bit = "bnb-4bit" in args.base_model_path
+        import glob as _glob
+        snapshot_dirs = _glob.glob(f"{args.base_model_path}/snapshots/*/")
+        base_dir = snapshot_dirs[0] if snapshot_dirs else args.base_model_path
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
         tokenizer = AutoTokenizer.from_pretrained(base_dir, local_files_only=True)
         if load_4bit:
@@ -408,20 +407,15 @@ if __name__ == "__main__":
         else:
             model = AutoModelForCausalLM.from_pretrained(
                 base_dir, device_map="auto", local_files_only=True, torch_dtype=torch.float16)
+        # Load LoRA adapter if present
+        if os.path.exists(os.path.join(args.model_path, "adapter_config.json")):
+            from peft import PeftModel
+            model = PeftModel.from_pretrained(model, args.model_path, is_trainable=False)
+            print(f"Loaded LoRA adapter from {args.model_path}")
     else:
-        model, tokenizer = FastLanguageModel.from_pretrained(
-            model_name=base_dir,
-            max_seq_length=2048,
-            load_in_4bit=load_4bit,
-            fast_inference=True,
-            local_files_only=True,
-            device_map="auto",
-        )
-    # Load LoRA adapter if present
-    if os.path.exists(os.path.join(args.model_path, "adapter_config.json")):
-        from peft import PeftModel
-        model = PeftModel.from_pretrained(model, args.model_path, is_trainable=False)
-        print(f"Loaded LoRA adapter from {args.model_path}")
+        # Use load_model_alt (same as benchmark.py) — handles snapshot
+        # resolution, LoRA detection, and loads with fast_inference=True
+        model, tokenizer = load_model_alt(args.base_model_path, args.model_path, 2048)
     print("Model loaded.")
 
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))

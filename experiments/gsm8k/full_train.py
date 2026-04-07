@@ -400,7 +400,7 @@ run_id = random.randint(1000, 9999)
 random.seed(FIXED_SEED)
 
 # ----------------- Output dirs -----------------
-output_dir = f"{model_name}/{dataset_text}/{config['max_z']}_{alpha_mi}_{alpha_det}_{alpha_smi}_{individual_reward_factor}_{pass_reward_factor}_{run_id}"
+output_dir = f"{model_name}/{dataset_text}/{config['max_z']}_{alpha_mi}_{alpha_det}_{alpha_smi}_{individual_reward_factor}_{pass_reward_factor}_seed{FIXED_SEED}_{run_id}"
 print("RUN ID: ", run_id)
 print("MODEL: ", model_name)
 
